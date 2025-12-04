@@ -30,4 +30,42 @@
   (part-1 (util/read-input "inputs/day3.txt"))
   :dimiro1)
 
-(defn part-2 [input] nil)
+
+(defn largest-12-joltage [bank]
+  (let [batteries (->> (str/split bank #"")
+                       (mapv parse-long))
+        total (count batteries)
+        needed 12]
+    (loop [pos 0
+           selected []]
+      (if (= (count selected) needed)
+        (parse-long (apply str selected))
+        (let [still-need (- needed (count selected))
+              remaining (- total pos)
+              lookahead (- remaining still-need)
+              window-end (+ pos lookahead 1)
+              window (subvec batteries pos window-end)
+              max-digit (apply max window)
+              max-pos (+ pos (.indexOf window max-digit))]
+          (recur (inc max-pos)
+                 (conj selected max-digit)))))))
+
+
+(comment
+  (largest-12-joltage "987654321111111")
+  (largest-12-joltage "811111111111119")
+  (largest-12-joltage "234234234234278")
+  (largest-12-joltage "818181911112111")
+  :dimiro1)
+
+(defn part-2 [input]
+  (->> input
+       str/split-lines
+       (remove str/blank?)
+       (map largest-12-joltage)
+       (reduce +)))
+
+(comment
+  (part-2 (util/read-input "inputs/day3-example.txt"))
+  (part-2 (util/read-input "inputs/day3.txt"))
+  :dimiro1)
