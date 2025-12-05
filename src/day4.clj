@@ -37,16 +37,57 @@
     (can-be-picked? (get-siblings shelf [1 1])))
   :dimiro1)
 
+
+(defn rolls-to-be-picked [shelf]
+  (filter some? (for [row (range (count shelf))
+                      col (range (count (first shelf)))]
+                  (if (= "@" (get-in shelf [row col]))
+                    (if (can-be-picked? (get-siblings shelf [row col]))
+                      [row col])))))
+
 (defn part-1 [input]
   (let [shelf (parse-input input)]
-    (count (filter true?
-                   (for [row (range (count shelf))
-                         col (range (count (first shelf)))]
-                     (if (= "@" (get-in shelf [row col]))
-                       (->> (get-siblings shelf [row col])
-                            (can-be-picked?))))))))
+    (count (rolls-to-be-picked shelf))))
 
 (comment
   (part-1 (util/read-input "inputs/day4-example.txt"))
   (part-1 (util/read-input "inputs/day4.txt"))
+  :dimiro1)
+
+(defn remove-roll [shelf pos]
+  (assoc-in shelf pos "."))
+
+(defn remove-rolls [shelf positions]
+  (loop [new-shelf shelf
+         pos (first positions)
+         remaining (rest positions)]
+    (if (empty? remaining)
+      (remove-roll new-shelf pos)
+      (recur (remove-roll new-shelf pos) (first remaining) (rest remaining)))))
+
+(comment
+  (let [shelf (parse-input (util/read-input "inputs/day4-example.txt"))]
+    (remove-rolls shelf [[1 0] [0 2]]))
+  :dimiro1)
+
+
+(comment
+  (let [shelf (parse-input (util/read-input "inputs/day4-example.txt"))]
+    (rolls-to-be-picked shelf))
+  :dimiro1)
+
+(defn part-2 [input]
+  (loop [current-shelf (parse-input input)
+         pickable-rolls (rolls-to-be-picked current-shelf)
+         removed-count 0]
+    (if (empty? pickable-rolls)
+      removed-count
+      (let [updated-shelf (remove-rolls current-shelf pickable-rolls)]
+        (recur updated-shelf
+               (rolls-to-be-picked updated-shelf)
+               (+ removed-count (count pickable-rolls)))))))
+
+(comment
+  (part-2 (util/read-input "inputs/day4-example.txt"))
+  (part-2 (util/read-input "inputs/day4.txt"))
   :dimiro1)
