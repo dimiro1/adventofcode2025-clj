@@ -28,3 +28,5 @@
 
 (defn day5-part-1 [] (day5/part-1 (util/read-input "inputs/day5.txt")))
 (defn day5-part-1-example [] (day5/part-1 (util/read-input "inputs/day5-example.txt")))
+(defn day5-part-2 [] (day5/part-2 (util/read-input "inputs/day5.txt")))
+(defn day5-part-2-example [] (day5/part-2 (util/read-input "inputs/day5-example.txt")))
