@@ -23,6 +23,8 @@ clj -M -e "(require 'core) (core/day5-part-1)"
 clj -M -e "(require 'core) (core/day5-part-1-example)"
 clj -M -e "(require 'core) (core/day5-part-2)"
 clj -M -e "(require 'core) (core/day5-part-2-example)"
+clj -M -e "(require 'core) (core/day6-part-1)"
+clj -M -e "(require 'core) (core/day6-part-1-example)"
 ```
 
 ## Benchmark
