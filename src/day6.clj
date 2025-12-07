@@ -72,8 +72,8 @@
        (mapv #(mod (quot n (long (Math/pow 10 %))) 10))))
 
 (comment
-  (decompose-number 651)
-  (decompose-number 6514)
+  (decompose-number 651 3)
+  (decompose-number 6514 4)
   :dimiro1)
 
 (defn rotate-numbers [arr]
