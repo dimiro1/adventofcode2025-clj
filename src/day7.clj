@@ -60,14 +60,16 @@
                             ;; current  | -> if previous is | then current becomes |
                             (and (= (:value north) "|")
                                  (not= value "^")) {:row row :col col :value "|"}
+                            ;;  |
                             ;; .^.
                             ;;   c
-                            ;; current becomes | if west and northwest is |
+                            ;; current becomes | if west is ^ and northwest is |
                             (and (= (:value west) "^")
                                  (= (:value northwest) "|")) {:row row :col col :value "|"}
+                            ;;  |
                             ;; .^.
                             ;; c
-                            ;; current becomes | if east and northeast is |
+                            ;; current becomes | if east is ^ and northeast is |
                             (and (= (:value east) "^")
                                  (= (:value northeast) "|")) {:row row :col col :value "|"}
                             :else cell)))
