@@ -8,7 +8,8 @@
             [day6]
             [day7]
             [day8]
-            [day9]))
+            [day9]
+            [day10]))
 
 (defn day1-part-1 [] (day1/part-1 (util/read-input "inputs/day1.txt")))
 (defn day1-part-1-example [] (day1/part-1 (util/read-input "inputs/day1-example.txt")))
@@ -48,3 +49,6 @@
 
 (defn day9-part-1 [] (day9/part-1 (util/read-input "inputs/day9.txt")))
 (defn day9-part-1-example [] (day9/part-1 (util/read-input "inputs/day9-example.txt")))
+
+(defn day10-part-1 [] (day10/part-1 (util/read-input "inputs/day10.txt")))
+(defn day10-part-1-example [] (day10/part-1 (util/read-input "inputs/day10-example.txt")))
