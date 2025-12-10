@@ -7,12 +7,12 @@
   [index lights]
   (update lights index #(if (zero? %) 1 0)))
 
-(defn toggle-lights [indexes lights]
+(defn toggle-all [indexes lights]
   "Toggle a vector of lights"
   (reduce (fn [lights index] (toggle index lights)) lights indexes))
 
 (comment
-  (toggle-lights [0 0] [0])
+  (toggle-all [0 0] [0])
   :dimiro1)
 
 (defn format-lights
@@ -22,7 +22,7 @@
 
 (comment
   (println (format-lights (toggle 0 [0 0 0 0 0])))
-  (println (format-lights (toggle-lights [1 2] [0 0 0 0 0])))
+  (println (format-lights (toggle-all [1 2] [0 0 0 0 0])))
   :dimiro1)
 
 (defn combinations [coll k]
@@ -36,7 +36,7 @@
            (combinations (rest coll) k))))
 
 (comment
-  (combinations [[3] [1 3] [2] [2 3] [0 2] [0 1]] 3)
+  (combinations [[3] [1 3] [2] [2 3] [0 2] [0 1]] 2)
   :dimiro1)
 
 (defn find-solution
@@ -46,7 +46,7 @@
   (some (fn [candidate]
           ;; candidate is in the format [[3] [1 3]]
           (let [indexes-to-toggle (flatten candidate)]
-            (when (= target (toggle-lights indexes-to-toggle initial-lights))
+            (when (= target (toggle-all indexes-to-toggle initial-lights))
               ;; found a combination that solves the problem
               candidate)))
         switches-combinations))
@@ -61,19 +61,9 @@
 (defn find-shortest-solution
   "Tries combinations of increasing size until a solution is found."
   [target switches]
-  (let [initial (mapv (fn [_] 0) target)]
-    (loop [combinations-len 1
-           result           nil
-           comb             (combinations switches combinations-len)]
-      (cond
-        ;; Found a solution
-        (some? result)                        result
-        ;; exhausted candidates
-        (= combinations-len (count switches)) nil
-        ;; keep trying
-        :else                                 (recur (inc combinations-len)
-                                                     (find-solution target initial comb)
-                                                     (combinations switches (inc combinations-len)))))))
+  (let [initial (mapv (constantly 0) target)]
+    (some #(find-solution target initial (combinations switches %))
+          (range 1 (inc (count switches))))))
 
 (comment
   (let [switches [[3] [1 3] [2] [2 3] [0 2] [0 1]]]
