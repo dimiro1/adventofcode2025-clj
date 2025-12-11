@@ -28,7 +28,8 @@
   :dimiro1)
 
 (defn find-all-paths [graph start end]
-  "Returns all paths from start to end as a vector of paths"
+  "Returns all paths from start to end as a vector of paths.
+This a naive approach, it only works in simple cases."
   (letfn [(depth-first-search [current path visited]
             (if (= current end)
               [path]
@@ -45,4 +46,34 @@
 (comment
   (part-1 (util/read-input "inputs/day11-example.txt"))
   (part-1 (util/read-input "inputs/day11.txt"))
+  :dimiro1)
+
+(defn count-paths-containing [graph start end node-a node-b]
+  "Counts paths from start to end containing both node-a and node-b.
+
+I found this article: https://www.geeksforgeeks.org/dsa/number-of-paths-from-source-to-destination-in-a-directed-acyclic-graph/, that is basically the idea. "
+  (let [memo (atom {})]
+    (letfn [(dp [node has-a has-b]
+              (let [has-a (or has-a (= node node-a))
+                    has-b (or has-b (= node node-b))
+                    key [node has-a has-b]]
+                (if (= node end)
+                  (if (and has-a has-b) 1 0)
+                  (if-let [cached (get @memo key)]
+                    cached
+                    (let [result (->> (get graph node #{})
+                                      (map #(dp % has-a has-b))
+                                      (reduce + 0))]
+                      (swap! memo assoc key result)
+                      result)))))]
+      (dp start false false))))
+
+(defn part-2 [input]
+  (let [parsed (parse-input input)
+        graph (build-graph parsed)]
+    (count-paths-containing graph :svr :out :dac :fft)))
+
+(comment
+  (part-2 (util/read-input "inputs/day11-example2.txt"))
+  (part-2 (util/read-input "inputs/day11.txt"))
   :dimiro1)
